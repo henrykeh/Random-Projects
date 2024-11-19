@@ -5,6 +5,8 @@ pygame.init()
 screen = pygame.display.set_mode((1800, 1000))
 run = True
 
+turn = "black"
+
 black_piece = pygame.image.load("Gomoku\Assets\purple_black.png").convert_alpha()
 black_piece_scaled = pygame.transform.scale(black_piece, (46, 46))
 white_piece = pygame.image.load("Gomoku\Assets\purple_white.png").convert_alpha()
@@ -25,7 +27,11 @@ board_pos_rects = []
 for i in range(len(board_pos_coords)):
     board_pos_rects.append(pygame.Rect(board_pos_coords[i][0] - 23, board_pos_coords[i][1] - 23, 46, 46))
 
-turn = "black"
+board_vis = [ [ [] for _ in range(15) ] for _ in range(15) ]
+def fill_board_vis(boardpos, turn):
+    x = (550 - boardpos[0]) / 50
+    y = (boardpos[1] - 150) / 50
+    board_vis[x][y].append(turn)
 
 placed_pieces = []
 def place_piece():
@@ -38,10 +44,12 @@ def place_piece():
             if len(board_pos_check[board_pos_coords_index]) == 0: #if list at index is empty
                 board_pos_check[board_pos_coords_index].append(turn)
                 placed_pieces.append([turn, (board_pos[0], board_pos[1])])
+                fill_board_vis(collided_board_pos, turn)
                 if turn == "black":
                     turn = "white"
                 else:
                     turn = "black"
+  
 
 def hover(mousepos):
     for board_pos in board_pos_rects:
