@@ -35,7 +35,7 @@ def place_piece():
             collided_rect_pos = board_pos.topleft #find position of the rect that has been collided with
             collided_board_pos = [collided_rect_pos[0] + 23, collided_rect_pos[1] + 23] #turns the collided rect pos into board pos
             board_pos_coords_index = board_pos_coords.index(collided_board_pos) #finds the index of this board pos
-            if len(board_pos_check[board_pos_coords_index]) == 0: #if placeable (list at index is empty)
+            if len(board_pos_check[board_pos_coords_index]) == 0: #if list at index is empty
                 board_pos_check[board_pos_coords_index].append(turn)
                 placed_pieces.append([turn, (board_pos[0], board_pos[1])])
                 if turn == "black":
@@ -46,10 +46,14 @@ def place_piece():
 def hover(mousepos):
     for board_pos in board_pos_rects:
         if board_pos.collidepoint(mouse_pos):
-            if turn == "black":
-                screen.blit(black_piece_scaled, board_pos)
-            else:
-                screen.blit(white_piece_scaled, board_pos)
+            collided_rect_pos = board_pos.topleft
+            collided_board_pos = [collided_rect_pos[0] + 23, collided_rect_pos[1] + 23]
+            board_pos_coords_index = board_pos_coords.index(collided_board_pos)
+            if len(board_pos_check[board_pos_coords_index]) == 0:
+                if turn == "black":
+                    screen.blit(black_piece_scaled, board_pos)
+                else:
+                    screen.blit(white_piece_scaled, board_pos)
 
 while run:
     
