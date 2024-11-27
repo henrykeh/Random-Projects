@@ -27,11 +27,13 @@ board_pos_rects = []
 for i in range(len(board_pos_coords)):
     board_pos_rects.append(pygame.Rect(board_pos_coords[i][0] - 23, board_pos_coords[i][1] - 23, 46, 46))
 
-board_vis = [ [ [] for _ in range(15) ] for _ in range(15) ]
+board_vis = [ [0] * 15 for _ in range(15) ]
 def fill_board_vis(boardpos, turn):
-    x = (550 - boardpos[0]) / 50
-    y = (boardpos[1] - 150) / 50
-    board_vis[x][y].append(turn)
+    x = int((boardpos[0] - 550) / 50)
+    y = int((boardpos[1] - 150) / 50)
+    board_vis[x][y] = turn
+    if check_win(x, y, turn):
+        print(turn +' won')
 
 placed_pieces = []
 def place_piece():
@@ -49,7 +51,6 @@ def place_piece():
                     turn = "white"
                 else:
                     turn = "black"
-  
 
 def hover(mousepos):
     for board_pos in board_pos_rects:
@@ -62,6 +63,35 @@ def hover(mousepos):
                     screen.blit(black_piece_scaled, board_pos)
                 else:
                     screen.blit(white_piece_scaled, board_pos)
+
+def check_win(x, y, turn):
+
+    for j in [(0, 1), (1, 1), (1, 0), (1, -1)]:
+        count = 1
+        increment_a = True
+        increment_b = True
+        for i in range(1, 5):
+            
+            if increment_a is False and increment_b is False:
+                continue
+            
+            if board_vis[x + i * j[0]][y + i * j[1]] == turn:
+                if increment_a is True:
+                    count += 1
+            else:
+                increment_a = False
+
+            if board_vis[x - i * j[0]][y - i * j[1]] == turn:
+                if increment_b is True:
+                    count += 1
+            else:
+                increment_b = False
+
+            if count >= 5:
+                return True
+            
+    return False
+
 
 while run:
     
